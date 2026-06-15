@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Login — Syntiox Ideas</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg-canvas">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <main class="login-page" role="main">
+    <div class="glass-card login-card" style="animation: scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);">
+
+      <!-- Logo -->
+      <div class="login-logo" aria-hidden="true">⚡</div>
+      <h1 class="login-title">Admin Access</h1>
+      <p class="login-subtitle">Syntiox Ideas Control Panel</p>
+
+      <!-- Login Form -->
+      <form id="loginForm" novalidate>
+
+        <div class="form-group" style="margin-bottom: 16px; text-align: left;">
+          <label class="form-label" for="adminPassword">Admin Password</label>
+          <div class="password-input-wrap">
+            <input
+              class="form-input"
+              type="password"
+              id="adminPassword"
+              name="password"
+              placeholder="Enter admin password"
+              autocomplete="current-password"
+              required
+              autofocus
+            >
+            <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility" title="Show/hide password">
+              👁
+            </button>
+          </div>
+        </div>
+
+        <button class="btn-login" type="submit" id="loginBtn">
+          <span id="loginBtnText">Login to Dashboard</span>
+          <span id="loginBtnIcon" aria-hidden="true">→</span>
+        </button>
+
+        <div class="login-error" id="loginError" role="alert" aria-live="polite"></div>
+
+      </form>
+
+      <!-- Back link -->
+      <div style="margin-top: 28px; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        <a href="/" style="font-size: 13px; color: var(--text-muted); text-decoration: none; display:inline-flex; align-items:center; gap:6px; transition: color 0.2s;" onmouseover="this.style.color='var(--text-secondary)'" onmouseout="this.style.color='var(--text-muted)'">
+          ← Back to Ideas Portal
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const form       = document.getElementById('loginForm');
+      const pwdInput   = document.getElementById('adminPassword');
+      const loginBtn   = document.getElementById('loginBtn');
+      const btnText    = document.getElementById('loginBtnText');
+      const btnIcon    = document.getElementById('loginBtnIcon');
+      const errorDiv   = document.getElementById('loginError');
+      const toggleBtn  = document.getElementById('togglePassword');
+
+      // If already logged in, redirect
+      if (localStorage.getItem('syntiox_admin_token')) {
+        window.location.href = '/admin.html';
+      }
+
+      // Toggle password visibility
+      toggleBtn.addEventListener('click', () => {
+        const isText = pwdInput.type === 'text';
+        pwdInput.type = isText ? 'password' : 'text';
+        toggleBtn.textContent = isText ? '👁' : '🙈';
+      });
+
+      // Submit
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = pwdInput.value;
+        if (!password) {
+          showError('Please enter the admin password.');
+          return;
+        }
+
+        setLoading(true);
+        errorDiv.style.display = 'none';
+
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password }),
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.error || 'Login failed.');
+          }
+
+          // Store token and redirect
+          localStorage.setItem('syntiox_admin_token', data.token);
+          localStorage.setItem('syntiox_token_time', Date.now().toString());
+
+          // Success animation before redirect
+          loginBtn.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
+          btnText.textContent = 'Access Granted!';
+          btnIcon.textContent = '✅';
+
+          setTimeout(() => {
+            window.location.href = '/admin.html';
+          }, 700);
+
+        } catch (err) {
+          setLoading(false);
+          showError(err.message);
+          pwdInput.value = '';
+          pwdInput.focus();
+        }
+      });
+
+      function setLoading(loading) {
+        loginBtn.disabled = loading;
+        if (loading) {
+          btnText.textContent = 'Verifying...';
+          btnIcon.innerHTML = '<span class="spinner"></span>';
+        } else {
+          btnText.textContent = 'Login to Dashboard';
+          btnIcon.textContent = '→';
+        }
+      }
+
+      function showError(msg) {
+        errorDiv.textContent = msg;
+        errorDiv.style.display = 'block';
+        // Shake animation
+        loginBtn.style.animation = 'none';
+        pwdInput.style.borderColor = 'rgba(239,68,68,0.6)';
+        setTimeout(() => { pwdInput.style.borderColor = ''; }, 2000);
+      }
+
+      // Enter key support
+      pwdInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') form.dispatchEvent(new Event('submit'));
+      });
+    })();
+  </script>
+
+</body>
+</html>
