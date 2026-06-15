@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Dashboard — Syntiox Ideas</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    /* Admin-specific additions */
+    .refresh-btn {
+      padding: 8px 16px;
+      background: rgba(124,58,237,0.15);
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: var(--radius-sm);
+      color: #a78bfa;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .refresh-btn:hover { background: rgba(124,58,237,0.25); }
+    .refresh-btn.spinning .refresh-icon { animation: spin 0.7s linear infinite; display:inline-block; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-brand);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .result-count {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .confirm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(8,11,20,0.85);
+      backdrop-filter: blur(8px);
+      place-items: center;
+      animation: fadeIn 0.2s ease;
+    }
+    .confirm-overlay.show { display: grid; }
+    .confirm-card {
+      padding: 36px;
+      max-width: 360px;
+      width: 90%;
+      text-align: center;
+      animation: scaleIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .confirm-icon { font-size: 40px; margin-bottom: 16px; }
+    .confirm-title { font-family: var(--font-brand); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .confirm-text { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+    .confirm-btns { display: flex; gap: 12px; justify-content: center; }
+
+    .btn-cancel {
+      padding: 10px 24px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .btn-cancel:hover { background: rgba(255,255,255,0.1); }
+
+    .btn-confirm-delete {
+      padding: 10px 24px;
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.4);
+      border-radius: var(--radius-sm);
+      color: #fca5a5;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .btn-confirm-delete:hover { background: rgba(239,68,68,0.3); }
+
+    .sub-card-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 0 18px 14px;
+    }
+
+    .status-badge {
+      padding: 3px 8px;
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .status-badge.new      { background: rgba(124,58,237,0.15); color: #a78bfa; }
+    .status-badge.reviewed { background: rgba(245,158,11,0.15);  color: var(--cat-idea); }
+    .status-badge.resolved { background: rgba(16,185,129,0.15);  color: var(--cat-feedback); }
+
+    .toast-admin {
+      position: fixed;
+      top: 80px; right: 24px;
+      z-index: 1000;
+      min-width: 260px;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(20,24,38,0.97);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--color-border);
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-card);
+      transform: translateX(120%);
+      opacity: 0;
+      transition: var(--transition-spring);
+    }
+    .toast-admin.show { transform: translateX(0); opacity: 1; }
+    .toast-admin.success { border-color: rgba(16,185,129,0.4); }
+    .toast-admin.error   { border-color: rgba(239,68,68,0.4); }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg-canvas">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <div class="admin-layout">
+
+    <!-- Topbar -->
+    <header class="admin-topbar" role="banner">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <a href="/" style="font-size:22px; text-decoration:none;" title="Syntiox Home" aria-label="Back to Syntiox Home">⚡</a>
+        <div>
+          <div class="admin-title">Syntiox Ideas</div>
+        </div>
+        <span class="admin-badge">Admin Panel</span>
+      </div>
+      <div class="admin-meta">
+        <span id="adminClock" aria-live="polite"></span>
+        <button class="refresh-btn" id="refreshBtn" aria-label="Refresh submissions">
+          <span class="refresh-icon" aria-hidden="true">🔄</span> Refresh
+        </button>
+        <button class="btn-logout" id="logoutBtn" aria-label="Logout from admin panel">Logout</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-content" role="main">
+
+      <!-- Stats -->
+      <section aria-label="Submission statistics">
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card" data-cat="total">
+            <div class="stat-icon" aria-hidden="true">📊</div>
+            <div class="stat-value" id="stat-total">—</div>
+            <div class="stat-label">Total</div>
+          </div>
+          <div class="stat-card" data-cat="idea">
+            <div class="stat-icon" aria-hidden="true">💡</div>
+            <div class="stat-value" id="stat-idea">—</div>
+            <div class="stat-label">Ideas</div>
+          </div>
+          <div class="stat-card" data-cat="bug">
+            <div class="stat-icon" aria-hidden="true">🐛</div>
+            <div class="stat-value" id="stat-bug">—</div>
+            <div class="stat-label">Bugs</div>
+          </div>
+          <div class="stat-card" data-cat="feedback">
+            <div class="stat-icon" aria-hidden="true">💬</div>
+            <div class="stat-value" id="stat-feedback">—</div>
+            <div class="stat-label">Feedback</div>
+          </div>
+          <div class="stat-card" data-cat="qa">
+            <div class="stat-icon" aria-hidden="true">❓</div>
+            <div class="stat-value" id="stat-qa">—</div>
+            <div class="stat-label">Q&amp;A</div>
+          </div>
+          <div class="stat-card" data-cat="general">
+            <div class="stat-icon" aria-hidden="true">📌</div>
+            <div class="stat-value" id="stat-general">—</div>
+            <div class="stat-label">General</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section aria-label="Filter and search submissions">
+        <div class="filters-bar" id="filtersBar">
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="filter-pill active" data-filter="all"      id="filter-all"      aria-pressed="true">All</button>
+            <button class="filter-pill" data-filter="idea"     id="filter-idea"     aria-pressed="false">💡 Ideas</button>
+            <button class="filter-pill" data-filter="bug"      id="filter-bug"      aria-pressed="false">🐛 Bugs</button>
+            <button class="filter-pill" data-filter="feedback" id="filter-feedback" aria-pressed="false">💬 Feedback</button>
+            <button class="filter-pill" data-filter="qa"       id="filter-qa"       aria-pressed="false">❓ Q&amp;A</button>
+            <button class="filter-pill" data-filter="general"  id="filter-general"  aria-pressed="false">📌 General</button>
+          </div>
+          <div class="search-wrap">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input
+              class="search-input"
+              type="search"
+              id="searchInput"
+              placeholder="Search by name, message..."
+              aria-label="Search submissions"
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Submissions List -->
+      <section aria-label="Submissions list">
+        <div class="section-header">
+          <div class="section-title">Submissions</div>
+          <div class="result-count" id="resultCount" aria-live="polite"></div>
+        </div>
+        <div class="submissions-grid" id="submissionsGrid">
+          <!-- Populated by admin-app.js -->
+          <div style="grid-column:1/-1;">
+            <div class="empty-state">
+              <div class="empty-icon" aria-hidden="true">⏳</div>
+              <div class="empty-title">Loading submissions...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Photo Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Photo preview" aria-modal="true">
+    <img id="lightboxImg" src="" alt="Full-size photo preview">
+  </div>
+
+  <!-- Delete Confirm -->
+  <div class="confirm-overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="glass-card confirm-card">
+      <div class="confirm-icon" aria-hidden="true">🗑️</div>
+      <div class="confirm-title" id="confirmTitle">Delete Submission?</div>
+      <p class="confirm-text">This action cannot be undone. The submission will be permanently removed from the database.</p>
+      <div class="confirm-btns">
+        <button class="btn-cancel" id="confirmCancel">Cancel</button>
+        <button class="btn-confirm-delete" id="confirmDelete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Toast -->
+  <div class="toast-admin" id="adminToast" role="alert" aria-live="polite">
+    <span id="adminToastIcon" aria-hidden="true">✅</span>
+    <span id="adminToastMsg"></span>
+  </div>
+
+  <script src="admin-app.js"></script>
+</body>
+</html>

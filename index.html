@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Share your ideas, bug reports, feedback, and questions with the Syntiox team. We'd love to hear from you!">
+  <title>Syntiox Ideas — Share Your Thoughts</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-canvas">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar-inner">
+      <a href="/" class="brand" aria-label="Syntiox Ideas home">
+        <div class="brand-icon" aria-hidden="true">⚡</div>
+        <div>
+          <div class="brand-name">Syntiox</div>
+          <div class="brand-tag">Ideas Portal</div>
+        </div>
+      </a>
+      <a href="/login.html" style="text-decoration:none; display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color: var(--text-muted); transition: color 0.2s;" onmouseover="this.style.color='var(--text-secondary)'" onmouseout="this.style.color='var(--text-muted)'">
+        <span>🔐</span> Admin
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-badge" aria-label="Open feedback portal">
+        <span class="dot" aria-hidden="true"></span>
+        Share Your Voice
+      </div>
+      <h1 id="hero-heading">
+        Your <span class="gradient-text">Ideas</span> Shape<br>Syntiox's Future
+      </h1>
+      <p>Found a bug? Got a brilliant idea? Have a question? We listen to every single message. Let's build something amazing together.</p>
+    </section>
+
+    <!-- Category Pills -->
+    <section aria-label="Select feedback category">
+      <div class="category-pills" role="group" aria-label="Category selector" id="categoryPills">
+        <button class="category-pill active" data-cat="idea" id="pill-idea" aria-pressed="true">
+          <span class="pill-icon" aria-hidden="true">💡</span> Idea
+        </button>
+        <button class="category-pill" data-cat="bug" id="pill-bug" aria-pressed="false">
+          <span class="pill-icon" aria-hidden="true">🐛</span> Bug Report
+        </button>
+        <button class="category-pill" data-cat="feedback" id="pill-feedback" aria-pressed="false">
+          <span class="pill-icon" aria-hidden="true">💬</span> Feedback
+        </button>
+        <button class="category-pill" data-cat="qa" id="pill-qa" aria-pressed="false">
+          <span class="pill-icon" aria-hidden="true">❓</span> Q&amp;A
+        </button>
+        <button class="category-pill" data-cat="general" id="pill-general" aria-pressed="false">
+          <span class="pill-icon" aria-hidden="true">📌</span> General
+        </button>
+      </div>
+    </section>
+
+    <!-- Submission Form -->
+    <section aria-label="Submission form">
+      <form class="glass-card form-card" id="submitForm" novalidate>
+
+        <!-- Hidden category field -->
+        <input type="hidden" id="selectedCategory" name="category" value="idea">
+
+        <div class="form-grid">
+          <!-- Name -->
+          <div class="form-group">
+            <label class="form-label" for="nameInput">Your Name *</label>
+            <input
+              class="form-input"
+              type="text"
+              id="nameInput"
+              name="name"
+              placeholder="John Doe"
+              autocomplete="name"
+              maxlength="80"
+              required
+            >
+          </div>
+
+          <!-- Contact Type -->
+          <div class="form-group">
+            <label class="form-label" for="contactType">Contact Via</label>
+            <div class="contact-type-group" id="contactTypeGroup" role="group" aria-label="Select contact method">
+              <button type="button" class="contact-type-btn active" data-contact="telegram" id="ct-telegram" aria-pressed="true">
+                <span class="ct-icon" aria-hidden="true">✈️</span>
+                Telegram
+              </button>
+              <button type="button" class="contact-type-btn" data-contact="whatsapp" id="ct-whatsapp" aria-pressed="false">
+                <span class="ct-icon" aria-hidden="true">💬</span>
+                WhatsApp
+              </button>
+              <button type="button" class="contact-type-btn" data-contact="number" id="ct-number" aria-pressed="false">
+                <span class="ct-icon" aria-hidden="true">📞</span>
+                Number
+              </button>
+              <button type="button" class="contact-type-btn" data-contact="none" id="ct-none" aria-pressed="false">
+                <span class="ct-icon" aria-hidden="true">🙈</span>
+                Anonymous
+              </button>
+            </div>
+          </div>
+
+          <!-- Contact Value -->
+          <div class="form-group" id="contactValueGroup">
+            <label class="form-label" for="contactValue">
+              <span id="contactLabel">Telegram Username</span>
+            </label>
+            <input
+              class="form-input"
+              type="text"
+              id="contactValue"
+              name="contactValue"
+              placeholder="@yourusername"
+              autocomplete="off"
+              maxlength="100"
+            >
+          </div>
+
+          <!-- Message -->
+          <div class="form-group full">
+            <label class="form-label" for="messageInput">Your Message *</label>
+            <textarea
+              class="form-textarea"
+              id="messageInput"
+              name="message"
+              placeholder="Describe your idea, bug, feedback or question in detail..."
+              rows="5"
+              maxlength="3000"
+              required
+            ></textarea>
+            <div style="font-size:11px; color: var(--text-muted); text-align:right; margin-top:4px;">
+              <span id="charCount">0</span> / 3000
+            </div>
+          </div>
+
+          <!-- Photo Upload -->
+          <div class="form-group full">
+            <label class="form-label">Screenshot / Photo <span style="color: var(--text-muted);">(Optional)</span></label>
+            <div class="photo-upload-area" id="photoUploadArea" role="button" aria-label="Upload screenshot">
+              <input type="file" id="photoInput" accept="image/*" aria-label="Select photo to upload">
+              <div id="uploadPlaceholder">
+                <div class="upload-icon" aria-hidden="true">🖼️</div>
+                <div class="upload-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+                <div class="upload-subtext">PNG, JPG, GIF up to 5MB</div>
+              </div>
+              <div class="photo-preview" id="photoPreview">
+                <img id="previewImg" src="" alt="Preview of uploaded screenshot">
+                <button type="button" class="remove-photo" id="removePhoto" aria-label="Remove photo">✕</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="btn-submit" type="submit" id="submitBtn">
+          <span id="btnText">Send to Syntiox Team</span>
+          <span id="btnIcon" aria-hidden="true">🚀</span>
+        </button>
+
+      </form>
+    </section>
+
+    <!-- Footer -->
+    <footer style="text-align:center; padding: 40px 0; color: var(--text-muted); font-size:13px;">
+      <p>Made with ❤️ by the <strong style="color: var(--text-secondary);">Syntiox Team</strong> &nbsp;·&nbsp; All submissions are securely encrypted</p>
+    </footer>
+
+  </main>
+
+  <!-- Success Overlay -->
+  <div class="success-overlay" id="successOverlay" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="glass-card success-card">
+      <div class="success-icon" aria-hidden="true">✅</div>
+      <div class="success-title" id="successTitle">Received! 🎉</div>
+      <p class="success-message">
+        Thank you for sharing! Your message has been securely delivered to the Syntiox team. We'll review it and get back to you soon.
+      </p>
+      <button class="btn-close-success" id="closeSuccess">
+        <span aria-hidden="true">↩</span> Submit Another
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="alert" aria-live="polite">
+    <span class="toast-icon" id="toastIcon" aria-hidden="true">⚠️</span>
+    <span id="toastMessage"></span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
