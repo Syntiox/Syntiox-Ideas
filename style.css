@@ -1035,14 +1035,244 @@ body {
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .form-grid { grid-template-columns: 1fr; }
-  .contact-type-group { grid-template-columns: repeat(2, 1fr); }
-  .form-card { padding: 24px 20px; }
-  .admin-topbar { padding: 12px 16px; }
-  .admin-content { padding: 20px 16px; }
+
+/* ── Tablet (≤ 768px) ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  #adminClock { display: none; }
+
+  .admin-topbar {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .admin-meta { gap: 8px; }
+  .admin-badge { display: none; }
+  .admin-content { padding: 24px 16px; }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .stat-value { font-size: 26px; }
+
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .search-wrap { width: 100%; min-width: unset; }
   .submissions-grid { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: repeat(3, 1fr); }
-  .filters-bar { flex-direction: column; align-items: stretch; }
-  .search-wrap { width: 100%; }
 }
+
+/* ── Mobile (≤ 640px) ───────────────────────────────────────── */
+@media (max-width: 640px) {
+
+  /* ── Layout ── */
+  .container { padding: 0 16px; }
+
+  /* ── Navbar ── */
+  .navbar { padding: 12px 0; }
+  .navbar-inner { padding: 0 16px; }
+  .brand-name { font-size: 17px; }
+  .brand-tag  { display: none; }
+
+  /* ── Hero ── */
+  .hero { padding: 40px 0 28px; }
+
+  .hero-badge {
+    font-size: 11px;
+    padding: 5px 12px;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 8vw, 40px);
+    margin-bottom: 12px;
+  }
+
+  .hero p {
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+
+  /* ── Category Pills: horizontal scroll ── */
+  .category-pills {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    gap: 8px;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin-bottom: 28px;
+  }
+
+  .category-pills::-webkit-scrollbar { display: none; }
+
+  .category-pill {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .pill-icon { font-size: 14px; }
+
+  /* ── Form ── */
+  .form-card { padding: 20px 16px; }
+  .form-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    font-size: 16px; /* Prevents iOS auto-zoom on focus */
+    padding: 12px 14px;
+  }
+
+  /* ── Contact Type Selector ── */
+  .contact-type-group {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .contact-type-btn {
+    padding: 10px 6px;
+    font-size: 10px;
+  }
+
+  .contact-type-btn .ct-icon { font-size: 18px; }
+
+  /* ── Photo Upload ── */
+  .photo-upload-area { padding: 20px 16px; }
+  .upload-icon { font-size: 26px; }
+  .upload-text { font-size: 13px; }
+
+  /* ── Submit Button ── */
+  .btn-submit {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  /* ── Toast: full width at bottom ── */
+  .toast {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    min-width: unset;
+    max-width: unset;
+    width: calc(100% - 32px);
+  }
+
+  /* ── Success Overlay ── */
+  .success-card { padding: 32px 24px; }
+
+  .success-icon {
+    width: 64px; height: 64px;
+    font-size: 28px;
+  }
+
+  .success-title { font-size: 22px; }
+
+  /* ── Login Card ── */
+  .login-page { padding: 16px; }
+  .login-card { padding: 32px 24px; }
+
+  .login-logo {
+    width: 52px; height: 52px;
+    font-size: 22px;
+    border-radius: 14px;
+    margin-bottom: 18px;
+  }
+
+  .login-title { font-size: 22px; }
+  .login-subtitle { font-size: 13px; margin-bottom: 28px; }
+  .btn-login { padding: 14px; font-size: 14px; }
+
+  /* ── Admin Dashboard ── */
+  .admin-topbar { padding: 10px 14px; gap: 8px; }
+  .admin-title  { font-size: 15px; }
+  .admin-meta   { gap: 6px; }
+
+  .refresh-btn { padding: 6px 10px; font-size: 12px; }
+  .btn-logout  { padding: 6px 12px; font-size: 12px; }
+
+  .admin-content { padding: 16px 12px; }
+
+  /* ── Stats: 2x3 grid ── */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card  { padding: 14px; }
+  .stat-icon  { font-size: 20px; margin-bottom: 6px; }
+  .stat-value { font-size: 24px; }
+  .stat-label { font-size: 10px; }
+
+  /* ── Filters: horizontal scroll ── */
+  .filters-bar {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .filters-bar > div:first-child {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 6px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .filters-bar > div:first-child::-webkit-scrollbar { display: none; }
+
+  .filter-pill {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .search-wrap { width: 100%; min-width: unset; }
+
+  /* ── Section Header ── */
+  .section-header { flex-wrap: wrap; gap: 8px; }
+  .section-title  { font-size: 13px; }
+
+  /* ── Submissions ── */
+  .submissions-grid { grid-template-columns: 1fr; gap: 12px; }
+  .sub-card-header  { padding: 14px 14px 10px; }
+  .sub-card-body    { padding: 0 14px 14px; }
+  .sub-card-footer  { padding: 8px 14px; flex-wrap: wrap; }
+  .sub-name         { font-size: 14px; }
+
+  /* ── Confirm Dialog ── */
+  .confirm-card  { padding: 28px 20px; }
+  .confirm-title { font-size: 17px; }
+  .confirm-btns  { gap: 10px; }
+
+  /* ── Bulk bar ── */
+  .bulk-bar { flex-wrap: wrap; gap: 8px; }
+}
+
+/* ── Very Small Phones (≤ 380px) ────────────────────────────── */
+@media (max-width: 380px) {
+  .hero h1 { font-size: 26px; }
+
+  .category-pill {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact-type-group { grid-template-columns: repeat(2, 1fr); }
+  .login-card { padding: 26px 18px; }
+}
+
