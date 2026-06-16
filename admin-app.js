@@ -70,8 +70,19 @@
         window.location.href = '/login.html';
         return;
       }
-      if (!res.ok) throw new Error('Failed to load submissions.');
-      const data = await res.json();
+      let data = {};
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || `Failed to load submissions (Status ${res.status}).`);
+      }
+
+      if (res.ok && !contentType?.includes('application/json')) {
+        throw new Error('Server returned an unexpected non-JSON response.');
+      }
       allSubmissions = data.submissions || [];
       updateStats(data.stats);
       exitSelectMode();
@@ -349,8 +360,19 @@
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Delete failed.');
+      let data = {};
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || `Delete failed (Status ${res.status}).`);
+      }
+
+      if (res.ok && !contentType?.includes('application/json')) {
+        throw new Error('Server returned an unexpected non-JSON response.');
+      }
 
       const msg = data.message || 'Deleted successfully.';
       showAdminToast(msg, 'success');

@@ -210,10 +210,18 @@
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      let data = {};
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || 'Submission failed. Please try again.');
+        throw new Error(data.error || `Submission failed (Status ${response.status}).`);
+      }
+
+      if (response.ok && !contentType?.includes('application/json')) {
+        throw new Error('Server returned an unexpected non-JSON response.');
       }
 
       // Success!
