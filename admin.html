@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#080b14">
   <title>Admin Dashboard — Syntiox Ideas</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -212,6 +213,20 @@
     .toast-admin.show { transform: translateX(0); opacity: 1; }
     .toast-admin.success { border-color: rgba(16,185,129,0.4); }
     .toast-admin.error   { border-color: rgba(239,68,68,0.4); }
+
+    @media (max-width: 640px) {
+      .toast-admin {
+        top: auto;
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+        min-width: unset;
+        transform: translateX(0) translateY(80px);
+        opacity: 0;
+      }
+      .toast-admin.show { transform: translateX(0) translateY(0); opacity: 1; }
+      .btn-label { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -238,7 +253,7 @@
       <div class="admin-meta">
         <span id="adminClock" aria-live="polite"></span>
         <button class="refresh-btn" id="refreshBtn" aria-label="Refresh submissions">
-          <span class="refresh-icon" aria-hidden="true">🔄</span> Refresh
+          <span class="refresh-icon" aria-hidden="true">🔄</span><span class="btn-label"> Refresh</span>
         </button>
         <button class="btn-logout" id="logoutBtn" aria-label="Logout from admin panel">Logout</button>
       </div>
